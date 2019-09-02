@@ -3,9 +3,9 @@ package api
 import (
 	"log"
 
-	"github.com/boantp/go-mysql-resto/client-grpc/restaurantgrpc"
-	"github.com/boantp/go-mysql-resto/config/db"
-	rs "github.com/boantp/go-mysql-resto/restaurant"
+	"github.com/nurseybushc/go-mysql-resto/client-grpc/restaurantgrpc"
+	"github.com/nurseybushc/go-mysql-resto/config/db"
+	rs "github.com/nurseybushc/go-mysql-resto/restaurant"
 	"google.golang.org/grpc"
 )
 

@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/boantp/go-mysql-resto/api"
+	"github.com/nurseybushc/go-mysql-resto/api"
 	"github.com/julienschmidt/httprouter"
 )
 

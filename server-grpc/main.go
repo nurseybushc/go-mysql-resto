@@ -8,7 +8,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
-	rs "github.com/boantp/go-mysql-resto/restaurant"
+	rs "github.com/nurseybushc/go-mysql-resto/restaurant"
 )
 
 const (

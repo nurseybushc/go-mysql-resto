@@ -9,12 +9,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/boantp/go-mysql-resto/api"
-	"github.com/boantp/go-mysql-resto/config/tpl"
+	"github.com/nurseybushc/go-mysql-resto/api"
+	"github.com/nurseybushc/go-mysql-resto/config/tpl"
 	"google.golang.org/grpc"
 
-	"github.com/boantp/go-mysql-resto/client-grpc/restaurantgrpc"
-	rs "github.com/boantp/go-mysql-resto/restaurant"
+	"github.com/nurseybushc/go-mysql-resto/client-grpc/restaurantgrpc"
+	rs "github.com/nurseybushc/go-mysql-resto/restaurant"
 )
 
 const (
