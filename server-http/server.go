@@ -14,10 +14,11 @@ func main() {
 	api := api.NewApiController()
 
 	//POST nearby restaurant
-	router.POST("/restaurant", api.GetNearbyRestaurant)
+	router.POST("/restaurant/create", api.GetNearbyRestaurant)
+	router.GET("/restaurants", api.GetAllRestaurants)
 	//GET detail restaurant
 	router.GET("/restaurant/:restaurant_id", api.GetDetailRestaurant)
 	//POST reservation restaurant
-	router.POST("/restaurant/reservation", api.CreateReservationRestaurant)
+	router.POST("/restaurant/reservation/create", api.CreateReservationRestaurant)
 	http.ListenAndServe(":3000", router)
 }

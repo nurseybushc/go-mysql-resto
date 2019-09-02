@@ -1,6 +1,6 @@
 # Dockerfile for gRPC Go
-FROM golang:onbuild
-
+#FROM golang:onbuild
+FROM golang:latest
 # install protobuf from source
 RUN apt-get update && \
     apt-get -y install git unzip build-essential autoconf libtool

@@ -142,6 +142,54 @@ func GetNearbyRestaurant(lat, lnt float64) []Restaurant {
 	return restaurants
 }
 
+// Query for Nearby restaurant and create gRPC restaurant
+func GetAllRestaurants() []Restaurant {
+	rows, err := db.DB.Query("SELECT a.restaurant_id, a.restaurant_name, a.restaurant_url, a.restaurant_description, a.restaurant_address, a.restaurant_phone, a.restaurant_location, b.cuisines_id, b.cuisines_name, a.restaurant_latitude, a.restaurant_longitude, a.restaurant_image FROM restaurant AS a LEFT JOIN cuisines AS b ON a.`restaurant_cuisines_id` = b.`cuisines_id` ORDER BY distance ASC", 6371)
+	checkErr(err)
+	defer rows.Close()
+
+	// Set up connection to the gRPC server
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	// Creates a new RestaurantClient
+	client := rs.NewRestaurantClient(conn)
+
+	restaurants := make([]Restaurant, 0)
+	for rows.Next() {
+		restaurant := Restaurant{}
+		err := rows.Scan(&restaurant.RestaurantId, &restaurant.RestaurantName, &restaurant.RestaurantUrl, &restaurant.RestaurantDescription, &restaurant.RestaurantAddress, &restaurant.RestaurantPhone, &restaurant.RestaurantLocation, &restaurant.RestaurantCuisines.CuisinesId, &restaurant.RestaurantCuisines.CuisinesName, &restaurant.Restaurantlatitude, &restaurant.RestaurantLongitude, &restaurant.RestaurantImage, &restaurant.RadiusKm)
+		checkErr(err)
+
+		//get operational
+		restId := restaurant.RestaurantId
+		op, req := GetOperational(restId)
+		restaurant.RestaurantOperational = op
+
+		//Create grpc data for CreateRestaurant
+		resto := &rs.RestaurantRequest{
+			RestaurantId:          restaurant.RestaurantId,
+			RestaurantName:        restaurant.RestaurantName,
+			RestaurantUrl:         restaurant.RestaurantUrl,
+			RestaurantDescription: restaurant.RestaurantDescription,
+			RestaurantAddress:     restaurant.RestaurantAddress,
+			RestaurantPhone:       restaurant.RestaurantPhone,
+			RestaurantLocation:    restaurant.RestaurantLocation,
+			RestaurantImage:       restaurant.RestaurantImage,
+			Operationals:          req,
+		}
+
+		// Create a new restaurant
+		restaurantgrpc.CreateRestaurant(client, resto)
+
+		restaurants = append(restaurants, restaurant)
+	}
+	return restaurants
+}
+
 // Query for get detail restaurant, Call to db not used in web only for api cause we call gRPC service
 func GetDetailRestaurant(restId int32) Restaurant {
 	rows := db.DB.QueryRow("SELECT a.restaurant_id, a.restaurant_name, a.restaurant_description, a.restaurant_address, a.restaurant_phone, a.restaurant_location, b.cuisines_id, b.cuisines_name, a.restaurant_latitude, a.restaurant_longitude, a.restaurant_image FROM restaurant AS a LEFT JOIN cuisines AS b ON a.`restaurant_cuisines_id` = b.`cuisines_id` WHERE a.`restaurant_id` =?", restId)

@@ -45,6 +45,22 @@ func (ac ApiController) GetNearbyRestaurant(w http.ResponseWriter, r *http.Reque
 	fmt.Fprintf(w, "%s", uj)
 }
 
+func (ac ApiController) GetAllRestaurants(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	println("GetAllRestaurants ENTER")
+	//Get Nearby Restaurant Query
+	restoQuery := GetAllRestaurants()
+
+	//define resp
+	d := AllRestaurantResp{"1", "success", restoQuery, ""}
+	//Marshal provided interface into JSON structure
+	uj, _ := json.Marshal(d)
+
+	//Write content-type, status code, data
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	fmt.Fprintf(w, "%s", uj)
+}
+
 func (ac ApiController) GetDetailRestaurant(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	//Grab restaurant ID
 	i := p.ByName("restaurant_id")
